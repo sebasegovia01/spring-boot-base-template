@@ -39,4 +39,13 @@ public class ProductTermsAndConditionsController {
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    public ProductTermsAndConditions update(@PathVariable Long id, @Valid @RequestBody RequestDto requestDto) {
+        ProductTermsAndConditionsDto dto = requestDto.getProductTermsAndConditions();
+        ProductTermsAndConditions existingEntity = service.findById(id);
+        existingEntity.setTycFrequencyCode(dto.getTycFrequencyCode());
+        existingEntity.setTycBenefitsDescription(dto.getTycBenefitsDescription());
+        return service.save(existingEntity);
+    }
 }

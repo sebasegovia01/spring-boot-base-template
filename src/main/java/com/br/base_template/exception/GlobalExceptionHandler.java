@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException ex) {
         CanonicalError canonicalError = new CanonicalError();
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
         canonicalError.setDescription("The requested resource was not found");
 
         SourceError sourceError = new SourceError();
-        sourceError.setCode("404");
+        sourceError.setCode(String.valueOf(HttpStatus.NOT_FOUND));
         sourceError.setDescription("The requested URL " + ex.getRequestURL() + " was not found on this server.");
         SourceError.ErrorSourceDetails errorSourceDetails = new SourceError.ErrorSourceDetails();
         errorSourceDetails.setSource(ErrorSource.API);
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
         canonicalError.setDescription("An unexpected error occurred");
 
         SourceError sourceError = new SourceError();
-        sourceError.setCode("500");
+        sourceError.setCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
         sourceError.setDescription(ex.getMessage());
         SourceError.ErrorSourceDetails errorSourceDetails = new SourceError.ErrorSourceDetails();
         errorSourceDetails.setSource(ErrorSource.API);
@@ -92,5 +92,28 @@ public class GlobalExceptionHandler {
         errorResponse.setSourceError(sourceError);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        CanonicalError canonicalError = new CanonicalError();
+        canonicalError.setCode("NOT_FOUND");
+        canonicalError.setType(ErrorType.NEG);
+        canonicalError.setDescription(ex.getMessage());
+
+        SourceError sourceError = new SourceError();
+        sourceError.setCode("404");
+        sourceError.setDescription(ex.getMessage());
+        SourceError.ErrorSourceDetails errorSourceDetails = new SourceError.ErrorSourceDetails();
+        errorSourceDetails.setSource(ErrorSource.API);
+        sourceError.setErrorSourceDetails(errorSourceDetails);
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(RespStatus.ERROR);
+        errorResponse.setCanonicalError(canonicalError);
+        errorResponse.setSourceError(sourceError);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
