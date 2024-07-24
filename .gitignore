@@ -35,3 +35,6 @@ build/
 # Ignore environment variables files
 .env
 .env.*
+
+# ignore gcp credentials
+pubsub-creds.json
