@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
         errorResponse.setCanonicalError(canonicalError);
         errorResponse.setSourceError(sourceError);
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
