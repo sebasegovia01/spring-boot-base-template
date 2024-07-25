@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RequestDto {
 
-    @JsonProperty("ProductTermsAndConditions")
+    @JsonProperty("ATM")
     @Valid
-    private ProductTermsAndConditionsDto productTermsAndConditions;
+    private ATMDto atm;
 
-    // Getters y Setters
-    public ProductTermsAndConditionsDto getProductTermsAndConditions() {
-        return productTermsAndConditions;
+    // Getters and Setters
+    public ATMDto getAtm() {
+        return atm;
     }
 
-    public void setProductTermsAndConditions(ProductTermsAndConditionsDto productTermsAndConditions) {
-        this.productTermsAndConditions = productTermsAndConditions;
+    public void setAtm(ATMDto atm) {
+        this.atm = atm;
     }
 }
