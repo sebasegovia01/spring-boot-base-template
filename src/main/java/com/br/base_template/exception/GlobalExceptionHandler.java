@@ -5,12 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +70,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
+        CanonicalError canonicalError = new CanonicalError();
+        canonicalError.setCode("MISSING_REQUEST_HEADER");
+        canonicalError.setType(ErrorType.NEG);
+        canonicalError.setDescription("Required request header is missing");
+
+        SourceError sourceError = new SourceError();
+        sourceError.setCode(String.valueOf(HttpStatus.BAD_REQUEST));
+        sourceError.setDescription(ex.getHeaderName() + " header is missing");
+        SourceError.ErrorSourceDetails errorSourceDetails = new SourceError.ErrorSourceDetails();
+        errorSourceDetails.setSource(ErrorSource.API);
+        sourceError.setErrorSourceDetails(errorSourceDetails);
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(RespStatus.ERROR);
+        errorResponse.setCanonicalError(canonicalError);
+        errorResponse.setSourceError(sourceError);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ex) {
@@ -92,5 +114,10 @@ public class GlobalExceptionHandler {
         errorResponse.setSourceError(sourceError);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
