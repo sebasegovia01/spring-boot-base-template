@@ -14,11 +14,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class ResponseWrapper implements ResponseBodyAdvice<Object> {
+public class SuccessResponseWrapper implements ResponseBodyAdvice<Object> {
 
     private final HttpServletRequest request;
 
-    public ResponseWrapper(HttpServletRequest request) {
+    public SuccessResponseWrapper(HttpServletRequest request) {
         this.request = request;
     }
 
