@@ -31,7 +31,7 @@ public class AutomatedTellerMachine {
     @Column(name = "atmdistrictname", length = 35)
     private String atmDistrictName;
 
-    @Column(name = "atmcountry_subdivisionmajorname", length = 35)
+    @Column(name = "atmcountrysubdivisionmajorname", length = 35)
     private String atmCountrySubDivisionMajorName;
 
     @Column(name = "atmfromdatetime", nullable = false)
