@@ -53,3 +53,6 @@ Dockerfile
 # Otros archivos y directorios específicos de tu proyecto (ajusta según sea necesario)
 # config.yaml
 # secrets.json
+
+#gcp secrets
+pubsub-creds.json
