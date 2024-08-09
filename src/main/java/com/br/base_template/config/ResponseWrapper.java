@@ -2,6 +2,7 @@ package com.br.base_template.config;
 
 import com.br.base_template.common.RespStatus;
 import com.br.base_template.dto.SuccessResponseDto;
+import com.br.base_template.dto.HealthCheckResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.Ordered;
@@ -34,6 +35,14 @@ public class ResponseWrapper implements ResponseBodyAdvice<Object> {
                                   org.springframework.http.server.ServerHttpResponse response) {
         if (body instanceof SuccessResponseDto || body instanceof ResponseEntity) {
             return body;
+        }
+
+        if (body instanceof HealthCheckResponse) {
+            SuccessResponseDto<HealthCheckResponse> successResponse = new SuccessResponseDto<>();
+            successResponse.setStatus(RespStatus.OK);
+            successResponse.setResult((HealthCheckResponse) body);
+            successResponse.setDescription("Health check successful");
+            return successResponse;
         }
 
         SuccessResponseDto<Object> successResponse = new SuccessResponseDto<>();
